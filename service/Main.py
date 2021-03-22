@@ -56,7 +56,7 @@ def add():
 def main_page():
     logger.info("首次登录")
     if request.method == "GET":
-        return redirect('login')
+        return redirect(url_for('login'))
 
 
 # 删除
@@ -125,6 +125,7 @@ def login():
     global re
     if request.method == "GET":
         return render_template('index.html', data={"msg": '首次加载页面', "code": 404})
+
     if request.method == "POST":
         name = request.form['name']
         logger.info(f"{name}开始登录")

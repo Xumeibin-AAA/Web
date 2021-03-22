@@ -16,28 +16,36 @@
 				text-align:right;
 				width: 80px;
 				height: 55px;
+				margin-top: -10px;
+				margin-left: 2px;
 				/*border: 0px solid greenyellow;*/
-				position: absolute;
-				left:10px;
-				top: 60px;
+				/* position: absolute; */
+			/* 	left:10px;
+				top: 60px; */
+				
 			}
 			.input{
 				text-align:left;
 				width: 180px;
 				height: 55px;
+				margin-top: -16.5%;
+				margin-left: 30%;
 				/*border: 0px solid greenyellow;*/
-				position: absolute;
-				left: 100px;
-				top: 60px;
+				/* position: absolute; */
+				left: 350/* px;
+				top: 200px; */
+				
 			}
 			.submit{
 				text-align:left;
 				width: 90px;
 				height: 30px;
 				/*border: 0px solid greenyellow;*/
-				position: absolute;
-				left: 130px;
-				top: 130px;				
+				/* position: absolute; */
+/* 				left: 130px;
+				top: 130px;		 */		
+				margin-top: 10%;
+				margin-left:38%
 			}
 			.f{
 				font:"微软雅黑";
@@ -64,17 +72,17 @@
 			<br />
 			<br />
 			<br />
-			<div class="label">
+			<div class="label" style="white-space:nowrap;" >
 				<label>用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户:</label>
 				<br />
 				<label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码:</label>
 			</div>
-			<div class="input">
+			<div class="input" style="white-space:nowrap;">
 				<input type="text" id="name" name="name" placeholder="请输入用户名" />
 				<br />
 				<input type="password" id="password" name="password"  placeholder="请输入密码" />
 			</div>
-			<div class="submit">
+			<div class="submit" >
 				<input class="f" type="button" id="button" value="登	录" onclick="ajax()"/>
 			</div>
 			
@@ -162,11 +170,12 @@
 					//arr数组转为16进制字符
 					var pwd_result = arr.toString().replace(new RegExp(',', 'gm'), '');
 					var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
-					var url = "http://"+window.location.host+"/login";
+					var url = "http://"+window.location.host+"/login?number=1";
 					httpRequest.open('POST', url, true); //第二步：打开连接
 					httpRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");//设置请求头 注：post方式必须设置请求头（在建立连接后设置请求头）
 					var data = 'name=' + name + '&password=' + pwd_result;
 					console.log(data);
+					debugger;
 					httpRequest.send(data);//发送请求 将情头体写在send中
 					/**
 					 * 获取数据后的处理程序
@@ -178,6 +187,9 @@
 					        if(JSON.parse(json).code==403){
 					        	alert(JSON.parse(json).msg)
 					        	location.reload();
+							}else if(JSON.parse(json).code==303){
+								alert(JSON.parse(json).msg)
+								location.reload();
 					        }else{
 								debugger
 					        	var url ="http://"+window.location.host;
