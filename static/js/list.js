@@ -62,7 +62,7 @@ function list(data,n){
 			//第四列
 			var td = document.createElement("td");
 			var a = document.createElement("a");
-			a.href = "../../data/NOVELS/load/" + book + ".txt";
+			a.href = "../../data/Novels/load/" + book + ".txt";
 			a.download = book;
 			var text = document.createTextNode("下载");
 			a.appendChild(text);
@@ -72,7 +72,7 @@ function list(data,n){
 			//第四列
 			var td = document.createElement("td");
 			var a = document.createElement("a");
-			a.href = "../../data/NOVELS/load/" + book + ".txt";
+			a.href = "../../data/Novels/load/" + book + ".txt";
 			a.download = book;
 			var text = document.createTextNode("删除");
 			a.appendChild(text);
