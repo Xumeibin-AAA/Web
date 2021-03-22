@@ -1,0 +1,18 @@
+.cnz_div{
+    width: 320px;
+    height: 200px;
+	border: 1px solid darkorange;	
+    position: absolute;
+    left: 40%;
+    top: 40%;
+    margin: -40px 0 0 -40px;
+    background-image: url(../img/奔跑的智能科技人.jpg);
+    background-repeat:no-repeat;
+    background-size: 100%;
+    background-position:0 0,100px 0,200px 0
+   	
+}
+body{
+	text-align: center;
+	background:azure
+}

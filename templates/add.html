@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style type="text/css">
+		body{
+			background-image: url(../static/img/彩色光芒背景.jpg);
+			background-repeat:no-repeat;
+			background-size: 100%;
+		}
+    	.m{
+    		width: 330px;
+    		height: 200px;
+    		border: 1px solid rgba(0,200,0,0.4);
+    		margin-left: 38%;
+    		margin-top: 15%;
+    		text-align: justify;
+    		font-family: "宋体";
+    		font-size: 24px; 
+    	}
+    	.back,.but{
+    		font-family: "宋体";
+    		font-size: 25px; 
+    		text-align: center;
+    	}
+    	.i{
+    		width: 94%;
+    		height: 23px;
+    		font-size: 22px;
+    	}
+    </style>
+</head>
+<body>
+    <div id="add_main" class="m">
+	    	<table border="1" cellspacing="1" cellpadding="1">
+	    		<tr>
+	    			<td>用&nbsp;户&nbsp;名:</td>
+	    			<td>
+		    			<div>
+		    				<input class="i" type="text" name="name" id="name" placeholder="请输入新用户名" />
+		    			</div>	    				
+	    			</td>
+
+	    		</tr>
+	    		<tr>
+	    			<td>密&nbsp;&nbsp;&nbsp;码:</td>
+	    			<td>
+		    			<div>
+		    				<input class="i" type="password" name="pwd" id="pwd" placeholder="请输入密码" />
+		    			</div>	    				
+	    			</td>
+
+	    		</tr>
+	    		<tr>
+	    			<td>再次输入:</td>
+	    			<td>
+		    			<div>
+		    				<input class="i" type="password" name="pwd1" id="pwd1" placeholder="请再次输入密码" />
+		    			</div>	    				
+	    			</td>
+
+	    		</tr>
+	    		<tr>
+	    			<td>
+		    			<div>
+		    				<input class="but" type="button" name="but" id="but" value="  确   认  " onclick="send()" />
+		    			</div>	    				
+	    			</td>
+	    			<td>
+		    			<div>
+		    				<input class="back" type="button" name="back" id="back" value="  返   回  " onclick="back()" />
+		    			</div>	    				
+	    			</td>
+	    		</tr>
+    </div>
+    <script type="text/javascript">
+    	function send(){
+    		var name = document.getElementById("name").value;
+    		var pwd = document.getElementById("pwd").value;
+    		var pwd1 = document.getElementById("pwd1").value;
+    		if(name.length===0||pwd.length===0){
+    			alert("用户名或密码不能为空");
+    		}else{
+    			if(pwd!=pwd1){
+    				alert("两次密码不一致");
+    			}else{
+					var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
+					var url ="http://"+window.location.host;
+					httpRequest.open('POST', url+'/add', true); //第二步：打开连接
+					httpRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");//设置请求头 注：post方式必须设置请求头（在建立连接后设置请求头）
+					var data = 'name=' + name + '&password=' + pwd;
+					console.log(data);
+					httpRequest.send(data);//发送请求 将情头体写在send中
+					
+					/**
+					 * 获取数据后的处理程序
+					 */
+					httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
+					    if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
+					        var json = httpRequest.responseText;//获取到服务端返回的数据
+					        console.log(json);
+					        if(JSON.parse(json).msg=='ok'){
+					        	alert("新建用户成功")
+					        }else{
+					        	alert("新建失败")
+					        }
+					    }
+					}
+    			}
+    		}
+
+    		
+    		
+    		
+    		
+    		
+    	}
+    	function back(){
+    		alert("back");
+    		window.location.href="http://www.baidu.com";
+    	}
+    </script>
+</body>
+</html>

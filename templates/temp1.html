@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+				.box{
+				    width:300px;
+				    height:300px;
+				    border:1px solid red;
+				    text-align: center;
+				    top: 300px;
+				    left: 300px;
+				}
+				.box1{
+				    width:500px;
+				    height:500px;
+				    border:1px solid greenyellow;
+				    text-align: center;
+				    top: 300px;
+				    left: 300px;
+				}
+		</style>
+	</head>
+	<body class="box" id="kkl">
+		<h6>测试软件</h6>
+		<a href="http://www.baidu.com">
+			<span id="f">
+			
+			超链接
+			</span>
+		</a>
+		
+		<script type="text/javascript">
+			var temp = true;
+			function m(){
+				var span = document.getElementById("f")
+				var x = event.x;
+				var y = event.y;
+				span.innerHTML = "x:" + x + "    " + "y:" + y
+				var b = document.getElementById("kkl");
+				console.log(window.getComputedStyle(b)["height"]);
+				console.log(window.getComputedStyle(b)["width"]);
+//				body.setAttribute("class","box1")
+
+				b.style.cssText="width: " + 100 + "px;"
+				
+//				b.style.cssText="height: " + 100 + "px;"
+				mm();
+				
+			}
+			function mm(){
+				var b = document.getElementById("kkl");
+				console.log(window.getComputedStyle(b)["height"]);
+				console.log(window.getComputedStyle(b)["width"]);
+//				body.setAttribute("class","box1")
+
+//				b.style.cssText="width: " + 100 + "px;"
+				
+				b.style.cssText="height: " + 100 + "px;"
+				
+			}
+			document.onmousemove = m;
+		</script>
+		
+
+</html>

@@ -1,0 +1,54 @@
+<html>
+
+	<head>
+		<title></title>
+		<meta charset="UTF-8"/>
+	</head>
+
+	<body>
+		<div id="m">
+			<h3>22345</h3>
+		</div>
+		<h1>1234</h1>
+		<input type="button" name="" id="" value="Start" onclick="fun()" />
+		<script type="text/javascript">
+
+
+			var myFirstPromise = new Promise(function(resolve) {
+				//当异步代码执行成功时，我们才会调用resolve(...), 当异步代码失败时就会调用reject(...)
+				//在本例中，我们使用setTimeout(...)来模拟异步代码，实际编码时可能是XHR请求或是HTML5的一些API方法.
+
+
+
+			var httpRequest = new XMLHttpRequest(); //第一步：创建需要的对象
+			var url = "http://172.24.118.136:8080";
+			httpRequest.open('get', url + '/manager/test?page=2', true); //第二步：打开连接
+
+			httpRequest.send(); //发送请求 将情头体写在send中
+
+			/**
+			 * 获取数据后的处理程序
+			 */
+			var json="";
+			httpRequest.onreadystatechange = function() { //请求后的回调接口，可将请求成功后要执行的程序写在其中
+				if(httpRequest.readyState == 4 && httpRequest.status == 200) { //验证请求是否发送成功
+					console.log(this);
+					json = httpRequest.responseText; //获取到服务端返回的数据
+					console.log(json);
+					resolve(json); //代码正常执行！
+				}
+			}
+					
+
+			});
+			var m;
+			myFirstPromise.then(function(successMessage) {
+				//successMessage的值是上面调用resolve(...)方法传入的值.
+				//successMessage参数不一定非要是字符串类型，这里只是举个例子
+			m = successMessage;
+			console.log(successMessage)
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		
+		<script src="../static/js/zDialog.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../static/js/zDrag.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.d{
+				border: 1px solid red;
+				background: #00FF00;
+				width: 400px;
+				height: 200px;
+				z-index: 1000;
+				margin-top: 40px;
+			}
+			.m{
+				z-index: 100;
+				width:100px;
+				height: 300px;
+				background: #007DDB;
+				
+			}
+			.k{
+				opacity: 0.3;
+	            pointer-events: none;
+			}
+			.b{
+				z-index: 100;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="k">
+			<button>按钮</button>
+			<h1>Test</h1>
+			
+		</div>
+		<div id="1" class="m">
+			<h1>aaaaa</h1>
+			<button class="b" onclick="but()">按钮</button>
+		</div>
+		
+		<dialog class="d">
+		  <form method="dialog">
+		    <p>确定 or 取消</p>
+		    <input type="text" name="nam" id="nam" value="" placeholder="aaaa"/>
+		    <input type="text" name="pwd" id="nam1" value="" placeholder="aaaa"/>
+		    <button type="button" value="yes" onclick="but1()">确定</button>
+		    <button type="button" value="no" onclick="but2()">取消</button>
+		    <button type="button" value="no" onclick="but3()">取消</button>
+		    
+		    
+		  </form>
+		</dialog>
+		
+		<script>			
+			function but(){
+				
+				var s = document.getElementById("1")
+				s.style.pointerEvents="none";
+				
+				console.log("点击按钮了")
+				var dialog = document.getElementsByTagName("dialog")
+				console.log(dialog[0])
+				dialog[0].open=open;
+				dialog[0].style.zIndex="2";
+				dialog[0].style.opacity=0.8;
+				dialog[0].style.pointerEvents="none";
+			}
+			function but1(){
+				var name = document.getElementById("nam").value;
+				alert(name);
+			}
+			function but2(){
+				var name = document.getElementById("nam1").value;
+				alert(name);
+			}
+			function but3(){
+				var dialog = document.getElementsByTagName("dialog")
+				console.log(dialog[0])
+				dialog[0].close();
+			}
+		</script>
+
+
+	</body>
+</html>

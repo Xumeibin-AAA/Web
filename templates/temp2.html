@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			.s{
+				width: 600px;
+				height: 500px;
+				border: 10px solid red;
+				/*background-image:url(../static/img/IMAGES/10.jpg);*/
+				background-repeat: no-repeat;
+				/*padding: 200px 100px*/
+				margin-top: 80px;
+				margin-left: 40px
+			}
+		</style>
+	</head>
+	<body>
+		<div id="main" class="s">
+        <script type="text/javascript" src="../static/js/echarts.min.js"></script>
+	        <script type="text/javascript">
+				var dom = document.getElementById("main");
+				var myChart = echarts.init(dom);
+				var app = {};
+				
+				var option;
+				var v1;
+				var v2;
+				var v3;
+				var v4;
+				var v5;
+				var v6;
+				var v7;
+				var x;
+				function m(){
+					
+					v1 = sum(10,100);
+					v2 = sum(10,100);
+					v3 = sum(10,100);
+					v4 = sum(10,100);
+					v5 = sum(10,100);
+					v6 = sum(10,100);
+					v7 = sum(10,100);
+				option = {
+				    xAxis: {
+				        type: 'category',
+				        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+				    },
+				    yAxis: {
+				        type: 'value'
+				    },
+				    series: [{
+				        data: [v1, v2, v3, v4, v5, v6, v7],
+				        type: 'bar'
+				    }]
+				};
+				
+				if (option && typeof option === 'object') {
+				    myChart.setOption(option);
+				}
+				}
+				var sleep = function(time) {
+				    var startTime = new Date().getTime() + parseInt(time, 10);
+				    while(new Date().getTime() < startTime) {}
+				};
+				
+
+
+				document.onmousemove = m;
+
+				
+
+				function sum (m,n){
+				　　var num = Math.floor(Math.random()*(m - n) + n);
+				　　return num;
+				}
+
+			</script>
+			
+		</div>
+	</body>
+</html>

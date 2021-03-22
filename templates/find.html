@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>CNZ</title>
+    <style type="text/css">
+    	div{
+			border: 1px solid greenyellow;
+			height: 100%;
+			
+    		}
+    </style>
+</head>
+<body>
+	<div id="main">
+		<input type="button" name="add" id="add" value="刷新数据库书名列表" />
+		<script type="text/javascript">
+				var but = document.getElementById("add")
+				but.onclick = function(){
+					var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+					var url = "http://"+window.location.host+"/update_book_list";
+					console.log(url);
+	        		httpRequest.open('GET', url, true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+	        		httpRequest.send();//第三步：发送请求  将请求参数写在URL中
+	        		        /**
+					         * 获取数据后的处理程序
+					         */
+			        httpRequest.onreadystatechange = function () {
+			            if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+			                var result = httpRequest.responseText;//获取到json字符串，还需解析
+			                console.log(result.toString());
+			                var data = JSON.parse(result);
+			                console.log(data.msg);
+			                alert(data.msg);
+			                
+			                
+			            }
+			        };
+				}
+
+	
+		</script>
+	</div>
+	<div id="main1">
+		<center>
+			<table border="2" id="table" cellspacing="1" cellpadding="1">
+				<tbody id="tbody">
+					<tr>
+						<th>ID</th>
+						<th>Name</th>
+						<th>Pwd</th>
+						<th>Image</th>
+						<th>操作</th>
+					</tr>
+				</tbody>
+			</table>
+		</center>
+
+		<script type="text/javascript">
+			var data = "{{data.data}}";
+			data = data.split(",")
+			//设置从数据库读的位数
+			for(var i=0;i<data.length;i=i+6){
+//				var id = data[i]
+				var name = data[i+2]
+				var pwd = data[i+3]
+				//添加tr
+				var tr = document.createElement("tr")
+				//添加td(显示ID)
+				var td = document.createElement("td")
+				var text = document.createTextNode(data[i])
+				td.appendChild(text)
+				tr.appendChild(td)
+				//添加td(显示Name)
+				var td = document.createElement("td")
+				var text = document.createTextNode(name)
+				td.appendChild(text)
+				tr.appendChild(td)
+				//添加td(显示pwd)
+				var td = document.createElement("td")
+				var text = document.createTextNode(pwd)
+				td.appendChild(text)
+				tr.appendChild(td)
+				// 添加a(显示图片)
+				var td = document.createElement("td")
+				var img = document.createElement("img");
+				//设置图片行
+				img.src="../static/img/IMAGES/"+(i+6)/6+".jpg";
+				img.width="60";
+				img.height="50";
+				img.alt = "../static/img/IMAGES/"+(i+4)/4+".jpg";
+				td.appendChild(img)
+				tr.appendChild(td);
+				// 添加input显示删除按钮
+				var td = document.createElement("td")
+				var input = document.createElement("input");
+				input.type="button";
+				input.id = "del"+(i+4)/4;
+				input.value = "删除";
+				input.name = "del";
+				// td添加到tr中
+				td.appendChild(input);
+				tr.appendChild(td);
+				var tbody = document.getElementById("tbody");
+				// tr 添加到tbody
+				tbody.appendChild(tr);
+			}
+		</script>
+		<script type="text/javascript">
+			var del = document.getElementsByName("del");
+				console.log(del)
+				console.log(del.length)
+				console.log(del[0])
+				for(var i = 0;i<del.length;i++){
+					del[i].onclick =  function(){
+					var x = this.getAttribute("id")
+					console.log(this.getAttribute("name"));
+					console.log("====================");
+					console.log(x);
+					console.log(this.toString())
+					var but = document.getElementById(x)
+					var name = this.parentNode.parentNode.children[1].innerHTML
+						temp = confirm("确认删除" + name + "吗？？？")
+						if (temp) {
+							function del(name){
+								var httpRequest = new XMLHttpRequest();//第一步：建立所需的对象
+								var url ="http://"+window.location.host;
+									var u = url + "/static/del?name="+ name
+							        httpRequest.open('GET', u, true);//第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+							        httpRequest.send();//第三步：发送请求  将请求参数写在URL中
+							        /**
+							         * 获取数据后的处理程序
+							         */
+							        httpRequest.onreadystatechange = function () {
+							            if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+							                var json = httpRequest.responseText;//获取到json字符串，还需解析
+							                console.log(json);
+							         			   }
+							      			    };
+											}
+						del(name);
+						sleep(500);
+						location.reload();
+									}
+
+						
+				}	
+				}
+				var sleep = function(time) {
+				    var startTime = new Date().getTime() + parseInt(time, 10);
+				    while(new Date().getTime() < startTime) {}
+				};
+		</script>
+	</div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <script src="../static/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    </head>
+	<body>
+		<input type="button" id="but1" name="b">
+			<h4>1</h4>
+
+		<input type="button" id="but2" name="b">
+			<h4>2</h4>
+
+		<input type="button" id="but3" name="b">
+			<h4>3</h4>
+
+		<input type="button" id="but4" name="b">
+			<h4>4</h4>
+
+		<script type="text/javascript">
+			var but = document.getElementsByName("b");
+			var arr = new Array();
+			for(var i=0;i<but.length;i++){
+				arr[i]=but[i];
+			}
+			for(var j=0;j<arr.length;j++){
+				arr[j].onclick = function(){
+					id = this.getAttribute("id");
+					console.log(id);
+					if(id=="but1"){
+						console.log("点击了but1")
+						var x = $("#div1").load("../temp/藏地密码-共378章节.txt")
+						console.log(x);
+						show();
+					}else if(id=="but2"){
+						console.log("点击了but2")
+						var x = $("#div1").load("../temp/test.txt")
+						console.log(x);
+						show();
+					}
+
+				}
+			}
+
+		</script>
+		<div id="div1">
+
+		</div>
+		<script type="text/javascript">
+			function show(){
+					var div = document.getElementById("div1");
+					var t = div.innerHTML;
+					console.log(t);
+			}
+
+		</script>
+	</body>
+</html>

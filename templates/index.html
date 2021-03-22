@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Test</title>
+		<link rel="shortcut icon" href="../static/img/favicon.ico">
+		<link rel="stylesheet" type="text/css" href="../static/css/cnz.css"/>
+		<style type="text/css">
+			body{
+				background-image: url(../static/img/9605.gif_wh860.gif);
+				background-repeat:no-repeat;
+				background-size: 100%;
+				
+			}
+			.label{
+				text-align:right;
+				width: 80px;
+				height: 55px;
+				/*border: 0px solid greenyellow;*/
+				position: absolute;
+				left:10px;
+				top: 60px;
+			}
+			.input{
+				text-align:left;
+				width: 180px;
+				height: 55px;
+				/*border: 0px solid greenyellow;*/
+				position: absolute;
+				left: 100px;
+				top: 60px;
+			}
+			.submit{
+				text-align:left;
+				width: 90px;
+				height: 30px;
+				/*border: 0px solid greenyellow;*/
+				position: absolute;
+				left: 130px;
+				top: 130px;				
+			}
+			.f{
+				font:"微软雅黑";
+				font-size: 20px;
+				width: 90px;
+				height: 30px;
+				text-align: center;
+			}
+			input{
+				border-radius: 6px;
+				box-shadow: 10px 1px 20px 10px rgba(0,50,0,0.2);
+				font-size: 16px;
+			}
+			label{
+				font-size: 19px;
+			}
+			div{
+				border-radius: 30px;
+			}
+		</style>
+	</head>	
+	<body>
+		<div id="main" class="cnz_div">
+			<br />
+			<br />
+			<br />
+			<div class="label">
+				<label>用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户:</label>
+				<br />
+				<label>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码:</label>
+			</div>
+			<div class="input">
+				<input type="text" id="name" name="name" placeholder="请输入用户名" />
+				<br />
+				<input type="password" id="password" name="password"  placeholder="请输入密码" />
+			</div>
+			<div class="submit">
+				<input class="f" type="button" id="button" value="登	录" onclick="ajax()"/>
+			</div>
+			
+		</div>
+		<script type="text/javascript">
+			var key_data = "";
+			var sleep = function(time) {
+			    var startTime = new Date().getTime() + parseInt(time, 10);
+			    while(new Date().getTime() < startTime) {}
+			};
+			
+			
+			
+			
+			function getJson(type = 'GET', url = '', data = {}) { //设定默认值
+				return new Promise((resolve, reject) => {
+					const xhr = new XMLHttpRequest();
+					xhr.onreadystatechange = function() {
+						if(this.readyState === 1) {
+						} else if(this.readyState === 4) {
+							if(this.status === 200 || this.status == 201 || this.status === 304) { //这个太复杂了，可以自己根据情况来调，不过现成的jq的ajax，axios, 原生的fetch都已经封装个得很好了，咱们写这个只是为了练习
+								resolve({
+									data: this.response,
+									msg: 'success'
+								})
+							} else {
+								reject({
+									data: this.response,
+									msg: 'error'
+								})
+							}
+						}
+					}
+					xhr.open(type, url);
+					xhr.send();
+				})
+			}
+			
+			
+			
+			function ajax() {
+				getJson('GET', "http://"+window.location.host+"/getkey", {
+				}).then(res => {
+					encryption(res['data'])
+				}).catch(err => {
+					console.log(err)
+				});
+			}
+			
+
+			//登录信息加密处理发送
+			function encryption(key_data){
+				var key_datas = JSON.parse(key_data);
+				//获取用户信息
+				var name = document.getElementById("name").value;
+				var pwd = document.getElementById("password").value;
+				if(name!=""&&pwd!=""){
+					//建一个长度为130值为0的数组
+					var arr = Array();
+					for(var i=0;i<131;i++){
+						arr[i]=0;
+					}
+					for(var i=0;i<pwd.length;i++){
+						var v = pwd[i].charCodeAt();
+						var e = parseInt(key_datas.publicKeyExponent,16);
+						var d = parseInt(key_datas.publicKeyModulus,16);
+						console.log(v);
+						console.log(e);
+						console.log(d);
+						var temp = remainder(v,e,d);
+						console.log(temp);
+						//将每位密码和长度存入arr数组中
+						arr[i]=temp;
+						arr[130-i]=(temp.toString().length)
+					}
+					console.log(arr)
+					function remainder(p1,p2,p3){
+						var result = 1;
+						for(var i=0;i<p2;i++){
+							result = result*p1%p3;
+						}
+						return result;
+					}
+					
+					//arr数组转为16进制字符
+					var pwd_result = arr.toString().replace(new RegExp(',', 'gm'), '');
+					var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
+					var url = "http://"+window.location.host+"/login";
+					httpRequest.open('POST', url, true); //第二步：打开连接
+					httpRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");//设置请求头 注：post方式必须设置请求头（在建立连接后设置请求头）
+					var data = 'name=' + name + '&password=' + pwd_result;
+					console.log(data);
+					httpRequest.send(data);//发送请求 将情头体写在send中
+					/**
+					 * 获取数据后的处理程序
+					 */
+					httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
+					    if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
+					        var json = httpRequest.responseText;//获取到服务端返回的数据
+					        console.log(json);
+					        if(JSON.parse(json).code==403){
+					        	alert(JSON.parse(json).msg)
+					        	location.reload();
+					        }else{
+								debugger
+					        	var url ="http://"+window.location.host;
+					        	window.location.href=url+"/index?user="+JSON.parse(json).user;
+					        }
+					    }
+					}
+			
+				}else{
+					alert("密码或者用户名为空");
+				}
+			}
+		</script>
+	</body>
+</html>

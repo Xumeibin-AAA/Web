@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<script src="../static/js/list.js" type="text/javascript" charset="utf-8"></script>
+		<title></title>
+		<style type="text/css">
+			img {
+				width: 329px;
+				height: 200px;
+			}
+			#m1{
+				text-align: center;
+				width: 430px;
+				border: 1px solid rgba(255, 0, 0, 0.07);
+				margin-top: 15px;
+				margin-left: 40%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div>
+			<table id="video" border="1" cellspacing="1" cellpadding="1">
+			</table>
+		</div>
+		<div id="m1">
+			<table>
+				<tr>
+					<td>
+						<input type="text" class="count" id="count" />
+					</td>
+					<td>
+						<button id="first">首页</button>
+					</td>
+					<td>
+						<button id="up">上一页</button>
+					</td>
+					<td>
+						<button id="show">1</button>
+					</td>
+					<td>
+						<button id="down">下一页</button>
+					</td>
+					<td>
+						<button id="end">尾页</button>
+					</td>
+				</tr>
+			</table>
+
+		</div>
+	</body>
+	<script type="text/javascript">
+		var count = {{data.list}};
+		console.log(count)
+		console.log(typeof(count))
+		//首页
+		var f = 1;
+		//尾页
+		var e = Math.ceil(count / 30);
+		//共多少页
+		var counts = document.getElementById("count");
+		counts.value = "共" + count + "条"
+		var arr = new Array();
+		for (var i = 0; i < e; i++) {
+			arr[i] = new Array();
+			var temp;
+			if (i * 30 + 30 <= count) {
+				temp = 30
+			} else {
+				temp = count % 30
+			}
+			for (var j = 1; j < temp + 1; j++) {
+				arr[i][j - 1] = i * 30 + j
+			}
+		}
+		show_number(1)
+		var m;
+
+		function show_number(n) {
+			m = n
+			var number = document.getElementById("show");
+			var text = document.createTextNode(n);
+			number.innerHTML = "";
+			number.appendChild(text);
+			console.log(arr[n - 1])
+			//发送请求
+			var httpRequest = new XMLHttpRequest(); //第一步：创建需要的对象
+			//			var url = "http://" + window.location.host;
+			var url = "http://172.24.118.136:8080";
+			httpRequest.open('GET', url + '/manager/get_page?' + 'page=' + n + "&type=video", true); //第二步：打开连接
+			httpRequest.send(); //发送请求 将情头体写在send中
+			/**
+			 * 获取数据后的处理程序
+			 */
+			httpRequest.onreadystatechange = function() { //请求后的回调接口，可将请求成功后要执行的程序写在其中
+				if (httpRequest.readyState == 4 && httpRequest.status == 200) { //验证请求是否发送成功
+					var json = httpRequest.responseText; //获取到服务端返回的数据
+					console.log(json);
+					video_list(json, m);
+
+				}
+			}
+		}
+		//首页
+		var first = document.getElementById("first")
+		first.onclick = function() {
+
+			show_number(f)
+		}
+		//上一页
+		var up = document.getElementById("up")
+		up.onclick = function() {
+			var number = document.getElementById("show").innerText;
+			if (number == f) {
+
+				show_number(f)
+			} else {
+
+				show_number(--number)
+			}
+
+		}
+		//下一页
+		var down = document.getElementById("down")
+		down.onclick = function() {
+			var number = document.getElementById("show").innerText;
+			if (number == e) {
+				show_number(e)
+			} else {
+				show_number(++number)
+			}
+
+		}
+		//尾页
+		var end = document.getElementById("end")
+		end.onclick = function() {
+			show_number(e)
+		}
+	</script>
+
+</html>

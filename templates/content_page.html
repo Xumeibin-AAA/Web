@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>content_page</title>
+		<script src="../static/js/list.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.title{
+				margin:0 auto;
+				width: -webkit-fit-content;
+				height: 80px;
+				border: 1px solid rgba(0,255,0,0.5);
+				left: 50%;
+				top: 30px;
+				text-align: center
+				
+			}
+			.content_page{
+				margin:0 auto;
+				width: 800px;
+				height: 100%;
+				border: 1px solid rgba(0,255,0,0.5);
+				margin-top: 50px;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="main">
+			<div id="title" class="title">
+				<script type="text/javascript">
+					title("{{data.name}}");
+				</script>
+			</div>
+			<div id="content" class="content_page">
+				<script type="text/javascript">
+					content("{{data.content}}")
+				</script>
+			</div>
+		</div>
+	</body>
+</html>

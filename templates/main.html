@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="icon" type="image/png" sizes="32x32" href="favicon.ico" />
+
+		<title>Title</title>
+		<style type="text/css">
+			body {
+				background-image: url(../static/img/奔跑的人线条科技背景.jpg);
+			}
+			
+			.find {
+				width: 100px;
+				height: 100px;
+				border: 1px solid rgba(255, 0, 0, 0.07);
+				position: absolute;
+				top: 10px;
+				left: 10px;
+				align-content: center;
+			}
+			
+			.add {
+				width: 100px;
+				height: 100px;
+				border: 1px solid rgba(255, 0, 0, 0.07);
+				position: absolute;
+				top: 10px;
+				left: 200px;
+				align-content: center;
+			}
+			
+			.add_book {
+				width: 100px;
+				height: 100px;
+				border: 1px solid rgba(255, 0, 0, 0.07);
+				position: absolute;
+				top: 10px;
+				left: 400px;
+				align-content: center;
+			}
+			.show_image {
+				width: 100px;
+				height: 100px;
+				border: 1px solid rgba(255, 0, 0, 0.07);
+				position: absolute;
+				top: 10px;
+				left: 600px;
+				align-content: center;
+			}
+			.camera {
+				width: 100px;
+				height: 100px;
+				border: 1px solid rgba(255, 0, 0, 0.07);
+				position: absolute;
+				top: 10px;
+				left: 800px;
+				align-content: center;
+			}
+			.list {
+				width: -webkit-fit-content;
+				height: auto;
+				border: 1px solid rgba(0, 255, 0, 1);
+				margin: 0 auto;
+				margin-top: 120px;
+				text-align: center;
+				font-family: "楷体";
+				font-size: 18px;
+			}
+			
+			.table_1 .td_1 {
+				padding: 10px 30px;
+				border-bottom: 1px solid #999;
+				border-right: 1px solid #999;
+			}
+			
+			.table_1 {
+				width: auto;
+				border-top: 1px solid #999;
+				border-left: 1px solid #999;
+				border-spacing: 0;
+				/*去掉单元格间隙*/
+			}
+			
+			body {
+				overflow: hidden;
+			}
+			
+			.count {
+				text-align: center;
+				width: 60px;
+			}
+			
+			#m1 {
+				text-align: center;
+				width: 330px;
+				border: 1px solid rgba(255, 0, 0, 0.07);
+				margin-top: 20px;
+				margin-left: 40%;
+			}
+			
+			button {
+				cursor: pointer;
+			}
+			
+			input {
+				cursor: url(../static/img/normal.cur), auto;
+			}
+			
+			body {
+				cursor: url(../static/img/normal.cur), auto;
+			}
+		</style>
+		<script src="../static/js/list.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div id="main">
+			<div class="find">
+				<a id="manage">
+					<img src="../static/img/find_manag.png" / width="100px" height="100px">
+				</a>
+			</div>
+			<div class="add">
+				<a id="add">
+					<img src="../static/img/add_manage.png" / width="100px" height="100px">
+				</a>
+			</div>
+			<div class="add_book">
+				<a id="addbook">
+					<img src="../static/img/add_book.png" / width="100px" height="100px">
+				</a>
+			</div>
+			<div class="show_image">
+				<a id="show_image">
+					<img src="../static/img/add_book.png" / width="100px" height="100px">
+				</a>
+			</div>
+			<div class="camera">
+				<a id="camera">
+					<img src="../static/img/find_manag.png" / width="100px" height="100px">
+				</a>
+			</div>
+			<div id="list" class="list">
+				<table border="1" cellspacing="8" cellpadding="15" id="tb" class="table_1">
+
+				</table>
+				<script type="text/javascript">
+					var url = "http://" + window.location.host;
+					var manage = document.getElementById("manage")
+					manage.href = url + "/static/find"
+					var add = document.getElementById("add")
+					add.href = url + "/add"
+					var add_book = document.getElementById("addbook")
+					add_book.href = url + "/manager/add_book"
+					var add_book = document.getElementById("show_image")
+					add_book.href = url + "/manager/show_image"
+					var add_book = document.getElementById("camera")
+					add_book.href = url + "/manager/open_camera"
+				</script>
+			</div>
+			<div id="m1">
+				<table>
+					<tr>
+						<td>
+							<input type="text" class="count" id="count" />
+						</td>
+						<td>
+							<button id="first">首页</button>
+						</td>
+						<td>
+							<button id="up">上一页</button>
+						</td>
+						<td>
+							<button id="show">1</button>
+						</td>
+						<td>
+							<button id="down">下一页</button>
+						</td>
+						<td>
+							<button id="end">尾页</button>
+						</td>
+					</tr>
+				</table>
+
+			</div>
+
+		</div>
+
+		<script type="text/javascript">
+			var count = {{data.list}};
+			console.log(count)
+			console.log(typeof(count))
+			//首页
+			var f = 1;
+			//尾页
+			var e = Math.ceil(count / 10);
+			//共多少页
+			var counts = document.getElementById("count");
+			counts.value = "共" + count + "条"
+			var arr = new Array();
+			for(var i = 0; i < e; i++) {
+				arr[i] = new Array();
+				var temp;
+				if(i * 10 + 10 <= count) {
+					temp = 10
+				} else {
+					temp = count % 10
+				}
+				for(var j = 1; j < temp + 1; j++) {
+					arr[i][j - 1] = i * 10 + j
+				}
+			}
+			show_number(1)
+			var m;
+
+			function show_number(n) {
+				m = n
+				var number = document.getElementById("show");
+				var text = document.createTextNode(n);
+				number.innerHTML = "";
+				number.appendChild(text);
+				console.log(arr[n - 1])
+				//发送请求
+				var httpRequest = new XMLHttpRequest(); //第一步：创建需要的对象
+				var url = "http://" + window.location.host;
+				httpRequest.open('GET', url + '/manager/get_page?' + 'page=' + n+"&type=book", true); //第二步：打开连接
+				httpRequest.send(); //发送请求 将情头体写在send中
+				/**
+				 * 获取数据后的处理程序
+				 */
+				httpRequest.onreadystatechange = function() { //请求后的回调接口，可将请求成功后要执行的程序写在其中
+					if(httpRequest.readyState == 4 && httpRequest.status == 200) { //验证请求是否发送成功
+						var json = httpRequest.responseText; //获取到服务端返回的数据
+						console.log(json);
+						list(json, m);
+
+					}
+				}
+			}
+			//首页
+			var first = document.getElementById("first")
+			first.onclick = function() {
+
+				show_number(f)
+			}
+			//上一页
+			var up = document.getElementById("up")
+			up.onclick = function() {
+				var number = document.getElementById("show").innerText;
+				if(number == f) {
+
+					show_number(f)
+				} else {
+
+					show_number(--number)
+				}
+
+			}
+			//下一页
+			debugger
+			var down = document.getElementById("down")
+			down.onclick = function() {
+				var number = document.getElementById("show").innerText;
+				if(number == e) {
+					show_number(e)
+				} else {
+					show_number(++number)
+				}
+
+			}
+			//尾页
+			var end = document.getElementById("end")
+			end.onclick = function() {
+				show_number(e)
+			}
+		</script>
+	</body>
+
+</html>

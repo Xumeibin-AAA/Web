@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<title></title>
+		<style type="text/css">
+			body{
+				background-image: url(../static/img/城市科技高清大图.jpg);
+				background-repeat:no-repeat;
+				background-size: 100%;
+			}
+			input{
+				cursor:pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="progressNumber">
+
+        </div>
+		<input type="file" name="file" id="file" />
+		<input type="submit" value="开始" onclick="fun()"/>
+		<input type="datetime-local" name="date" id="date" value="" />
+
+		<script type="text/javascript">
+			function fun(){
+				debugger;
+				var file = document.getElementById("file");
+				var size = file.files[0].size;
+				var name = file.files[0].name	//小说类型:text/plain
+				if(name.substring(name.indexOf(".")+1,name.length)==="txt"){
+					console.log(file)	
+					console.log(file.value)	
+					//新建FormData对象,存放数据
+					var form = new FormData();
+					//发送请求
+					var httpRequest = new XMLHttpRequest();
+					httpRequest.upload.addEventListener("progress", uploadProgress, false);
+//					var url = "http://" + window.location.host + "/manager/add_book"
+					var url = "http://" + "cnzcnz.com:8080" + "/manager/add_book"
+					console.log(url);
+					httpRequest.open('POST',url,true)
+					form.append("aaa",file.files[0])
+					httpRequest.send(form)
+					//响应消息
+					httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
+					    if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
+					        var json = httpRequest.responseText;//获取到服务端返回的数据
+					        console.log(json);
+					        alert(json);
+					    }
+					}	
+				}else{
+					alert("文件格式不正确,请选择.TXT文件上传")
+				}
+			}
+				 function uploadProgress(evt) {
+			        if (evt.lengthComputable) {
+					    var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+				        document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
+			        } else {
+			            document.getElementById('progressNumber').innerHTML = 'unable to compute';
+			        }
+		    	}
+			
+		</script>
+	</body>
+</html>

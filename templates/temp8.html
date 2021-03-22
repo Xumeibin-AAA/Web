@@ -1,0 +1,47 @@
+<html>
+
+	<head>
+		<title></title>
+	</head>
+
+	<body>
+		<script>
+			function getJson(type = 'GET', url = './test.json', data = {}) { //设定默认值
+				return new Promise((resolve, reject) => {
+					const xhr = new XMLHttpRequest();
+					xhr.onreadystatechange = function() {
+						if(this.readyState === 1) {
+						} else if(this.readyState === 4) {
+							if(this.status === 200 || this.status == 201 || this.status === 304) { //这个太复杂了，可以自己根据情况来调，不过现成的jq的ajax，axios, 原生的fetch都已经封装个得很好了，咱们写这个只是为了练习
+								resolve({
+									data: this.response,
+									msg: 'success'
+								})
+							} else {
+								reject({
+									data: this.response,
+									msg: 'error'
+								})
+							}
+						}
+					}
+					xhr.open(type, url);
+					xhr.send();
+				})
+			}
+
+			function ajax() {
+				getJson('GET', 'http://172.24.118.136:8080/manager/test?page=2', {
+				}).then(res => {
+					console.log(res);
+					return res;
+				}).catch(err => {
+					console.log(err)
+				});
+			}
+			var result = ajax()
+			console.log(result)			
+		</script>
+	</body>
+
+</html>
