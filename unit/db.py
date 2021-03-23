@@ -69,9 +69,9 @@ def get_sql_time(cookie):
 
 
 # 保存用户登录的日志
-def login_log(user):
+def login_log(user,request_headers):
     conn = connect()
-    execute(conn, f"INSERT INTO login_log(name,login_time) VALUES ('{user}','{time.strftime('%Y-%m-%d %H:%M:%S')}');")
+    execute(conn, f"INSERT INTO login_log(name,login_time,user_inf) VALUES ('{user}','{time.strftime('%Y-%m-%d %H:%M:%S')}','{request_headers}');")
     disconnect(conn)
 
 

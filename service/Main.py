@@ -1,5 +1,7 @@
 import sys, os
 
+from Web.unit.interceptor import interceptor
+
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(os.getcwd()))))
 from Web.unit.unit import md5, getpwd
 from flask import Flask, request, jsonify, render_template, url_for, Response, redirect
@@ -26,18 +28,20 @@ logger.add(f"../data/Log/{time.strftime('%Y-%m-%d')}.log")
 @app.route('/static/find', methods=['GET', 'POST'])
 def find():
     if request.method == "GET":
-        if interceptor():
+        re = request
+        if interceptor(re):
             data = find_data()
             logger.info(f"查询结果为:{data}")
             return render_template('find.html', data=data)
         else:
-            return redirect(url_for('login'))
+            return redirect(url_for('login', code=303))
 
 
 @app.route('/add', methods=['GET', 'POST'])
 def add():
     logger.info("添加用户")
-    if interceptor():
+    re =request
+    if interceptor(re):
         if request.method == "POST":
             name = request.form['name']
             password = request.form['password']
@@ -48,7 +52,7 @@ def add():
         else:
             return render_template("add.html")
     else:
-        return redirect(url_for('login'))
+        return redirect(url_for('login', code=303))
 
 
 # 主页面
@@ -56,13 +60,14 @@ def add():
 def main_page():
     logger.info("首次登录")
     if request.method == "GET":
-        return redirect(url_for('login'))
+        return redirect(url_for('login', code=404))
 
 
 # 删除
 @app.route('/static/del')
 def delete():
-    if interceptor():
+    re =request
+    if interceptor(re):
         logger.info("开始删除用户")
         name = request.args.get('name')
         logger.info(f"删除{name}")
@@ -71,20 +76,21 @@ def delete():
         logger.info(f"删除返回值为{data}")
         return msg
     else:
-        return redirect(url_for('login'))
+        return redirect(url_for('login', code=303))
 
 
 # 获取book_name
 @app.route('/load')
 def book_name():
-    if interceptor():
+    re =request
+    if interceptor(re):
         name = request.args.get("name")
         content = load(name)
         name = name[:name.index("-")]
         logger.info("获取所有书列表")
         return render_template('content_page.html', data={"name": name, "content": content})
     else:
-        return redirect(url_for('login'))
+        return redirect(url_for('login', code=303))
 
 
 @app.route('/index', methods=['GET', 'POST'])
@@ -95,6 +101,7 @@ def index():
     cookie_id = md5(str(uu))
     update_cookie(cookie_id, time.time(), name)
     r.set_cookie(key='Cookie_id', value=cookie_id, max_age=10000)
+    r.set_cookie(key='username', value=name, max_age=10000)
     logger.info(f"生成cookie_id:{cookie_id}")
     return r
 
@@ -110,22 +117,26 @@ def getkey():
 @app.route('/main')
 def main():
     if request.method == "GET":
-        if interceptor():
+        re = request
+        if interceptor(re):
             logger.info("更新数据库里内容")
             update_image_list()
             update_book_list()
             count = book_count()
             return render_template('main.html', data={"list": count})
         else:
-            return redirect(url_for('login'))
+            return redirect(url_for('login', code=303))
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     global re
     if request.method == "GET":
-        return render_template('index.html', data={"msg": '首次加载页面', "code": 404})
-
+        if request.args.get("code")=='303':
+            logger.info("登录超时,请重新登录")
+            return render_template('index.html', data={"msg": '登录超时,请重新登录', "code": 303})
+        else:
+            return render_template('index.html', data={"msg": '首次加载页面', "code": 404})
     if request.method == "POST":
         name = request.form['name']
         logger.info(f"{name}开始登录")
@@ -136,43 +147,17 @@ def login():
             brr.append(chr(get_pwd(re[1], arr)))
         mingwen_pwd = ""
         for b in brr:
-            mingwen_pwd+=b;
+            mingwen_pwd += b;
         data = login_judge(name, md5(mingwen_pwd))
         if data["Code"] == 403:
             logger.warning(f"{name}登录失败")
             return {"msg": '用户名或者密码错误', "code": 403}
         else:
             logger.info(f"{name}登录成功")
-            login_log(name)
+
+            login_log(name,request.headers)
             return {"msg": 'succeed', "code": 200, "user": name}
 
-
-# 更新数据库和文件小说列表
-# @app.route('/update_book_list')
-# def update_book_list():
-#     if request.method == "GET":
-#         if interceptor():
-#             update_book_list()
-#             data={"msg":"刷新成功","code":1}
-#             logger.info("更新数据库和文件小说列表")
-#             return data
-#         else:
-#             return redirect(url_for('login'))
-
-
-# 拦截器
-def interceptor():
-    c = request.cookies.get('Cookie_id')
-    save_cookie = get_sql_time(c)
-    logger.info(f"当前cookie_id为:{c}")
-    logger.info(f"数据库储存的用户cookie为:{save_cookie}")
-    if c != "":
-        if save_cookie:
-            if time.time() - save_cookie < 1000:
-                return True
-            return False
-    else:
-        return False
 
 
 if __name__ == '__main__':
